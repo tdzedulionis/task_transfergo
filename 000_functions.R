@@ -67,7 +67,8 @@ create_scatter <- function(data, x_var, y_var, color_var, facet_var, title) {
     geom_point() +
     facet_wrap(vars({{facet_var}})) +
     theme_minimal() +
-    labs(title = title, x = deparse(substitute(x_var)), y = deparse(substitute(y_var)))
+    labs(title = title, x = deparse(substitute(x_var)), y = deparse(substitute(y_var))) +
+    theme(legend.position="bottom")
 }
 
 

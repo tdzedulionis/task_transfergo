@@ -52,7 +52,7 @@ print(model_results_cost_split$`PLN-UAH - high-activity-users`$plot)
 # Fit models for each pair
 model_results_fx_split <- transactional_activity_fx_rate_split %>%
   group_by(pair_name, user_activity_group) %>%
-  group_map(~fit_and_extract(.x, .y$pair_name, .y$user_activity_group ,regressor = 'fx_rate')) %>%
+  group_map(~fit_and_extract(.x, .y$pair_name, .y$user_activity_group ,regressor = 'fx_rate_spread')) %>%
   set_names(
     transactional_activity_cost_split %>%
       group_by(pair_name, user_activity_group) %>%
@@ -114,8 +114,8 @@ summary_results_fx_split <- map_dfr(model_results_fx_split, ~tibble(
   pair = paste0(.x$pair, " - ", .x$user_activity_group),
   nb_aic = .x$aic_comparison$AIC[1],
   gam_aic = .x$aic_comparison$AIC[2],
-  nb_fx_rate_effect = .x$nb_results$estimate[.x$nb_results$term == "fx_rate"],
-  gam_edf = .x$gam_results$edf[.x$gam_results$term == "s(fx_rate)"]
+  nb_fx_rate_effect = .x$nb_results$estimate[.x$nb_results$term == "fx_rate_spread"],
+  gam_edf = .x$gam_results$edf[.x$gam_results$term == "s(fx_rate_spread)"]
 ))
 
 # View summary results

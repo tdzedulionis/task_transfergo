@@ -14,7 +14,7 @@ hist_cost_split <- create_histogram(transactional_activity_cost_split, transacti
 boxplot_cost <- create_boxplot(transactional_activity_cost_whole, transaction_cost_group, transaction_count, pair_name, "Transaction Counts by Transaction Cost Group")
 boxplot_fx_rate <- create_boxplot(transactional_activity_fx_rate_whole, fx_rate_group, transaction_count, pair_name, "Transaction Counts by fx_rate Group")
 scatter_cost <- create_scatter(transactional_activity_cost_split, transaction_cost_pct, transaction_count, user_activity_group, pair_name, "Transaction Count vs. Transaction cost [%]")
-scatter_fx_rate <- create_scatter(transactional_activity_fx_rate_split, fx_rate, transaction_count, user_activity_group, pair_name, "Transaction Count vs. fx_rate")
+scatter_fx_rate <- create_scatter(transactional_activity_fx_rate_split, fx_rate_spread, transaction_count, user_activity_group, pair_name, "Transaction Count vs. fx_rate_spread")
 
 
 # # |---- Statistical tests ----

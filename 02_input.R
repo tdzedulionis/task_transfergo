@@ -9,7 +9,7 @@ data <- fread(data_path) %>%
     transaction_cost_pct = round((payment_amount * (fx_rate - mid_market_fx_rate)) / (payment_amount * mid_market_fx_rate) * 100, 4),
     transaction_cost_pct_with_delivery_fee = round((payment_amount * (fx_rate - mid_market_fx_rate) + delivery_option_fee) / (payment_amount * mid_market_fx_rate) * 100, 4),
     fx_rate = round(fx_rate, 3),
-    spread = fx_rate - mid_market_fx_rate
+    fx_rate_spread = round(fx_rate - mid_market_fx_rate, 3)
   )] %>%
   # Create a unique identifier for each country-currency pair
   .[, pair_id := .GRP, by = .(from_country, to_country)]
@@ -93,18 +93,18 @@ transactional_activity_fx_rate_whole <- copy(data) %>%
   .[, .(
     total_payment_amount = sum(payment_amount),
     transaction_count = .N
-  ), by = .(fx_rate, pair_id)] %>%
+  ), by = .(fx_rate_spread, pair_id)] %>%
   # Split fx-rate in low-medium-high categories
-  .[, fx_rate_group := cut(fx_rate, breaks = 3, labels = FALSE),
+  .[, fx_rate_group := cut(fx_rate_spread, breaks = 3, labels = FALSE),
     by = .(pair_id)] %>%
   .[, pair_name := fcase(
     pair_id == 1, 'GBP-RON',
     pair_id == 2, 'PLN-UAH'
   )] %>%
   .[, fx_rate_group := fcase(
-    fx_rate_group == 1, 'low-fx-rate',
-    fx_rate_group == 2, 'medium-fx-rate',
-    default = 'high-fx-rate'
+    fx_rate_group == 1, 'low-fx-rate_spread',
+    fx_rate_group == 2, 'medium-fx-rate_spread',
+    default = 'high-fx-rate_spread'
   )] %>%
   group_by(pair_id) %>%
   # Remove outliers
@@ -139,17 +139,17 @@ transactional_activity_fx_rate_split <- copy(data) %>%
   .[, .(
     total_payment_amount = sum(payment_amount),
     transaction_count = .N
-  ), by = .(fx_rate, pair_id, user_activity_group)] %>%
+  ), by = .(fx_rate_spread, pair_id, user_activity_group)] %>%
   # Split fx-rate in low-medium-high categories
-  .[, fx_rate_group := cut(fx_rate, breaks = 3, labels = FALSE),
+  .[, fx_rate_group := cut(fx_rate_spread, breaks = 3, labels = FALSE),
     by = .(pair_id)] %>%
   .[, pair_name := fcase(
     pair_id == 1, 'GBP-RON',
     pair_id == 2, 'PLN-UAH'
   )] %>%
   .[, fx_rate_group := fcase(
-    fx_rate_group == 1, 'low-fx-rate',
-    fx_rate_group == 2, 'medium-fx-rate',
+    fx_rate_group == 1, 'low-fx-rate_spread',
+    fx_rate_group == 2, 'medium-fx-rate_spread',
     default = 'high-fx-rate'
   )] %>%
   group_by(pair_id, user_activity_group) %>%
